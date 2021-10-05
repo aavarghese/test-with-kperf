@@ -1,0 +1,22 @@
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-src10
+  annotations:
+    autoscaling.knative.dev/class: keda.autoscaling.knative.dev
+    autoscaling.knative.dev/maxScale: "1"
+    autoscaling.knative.dev/minScale: "1"
+    keda.autoscaling.knative.dev/cooldownPeriod: "10"
+    keda.autoscaling.knative.dev/kafkaLagThreshold: "2"
+    keda.autoscaling.knative.dev/pollingInterval: "10"
+spec:
+  consumerGroup: kafka-src10j27b
+  bootstrapServers:
+  - my-cluster-kafka-bootstrap.kafka:9092 # note the kafka namespace
+  topics:
+  - topic10
+  sink:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: kperf-eventing-receiver
