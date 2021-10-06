@@ -21,13 +21,13 @@ unset REDIS_ADDRESS
 
 source ./setup/http-only.sh
 export SLEEP_SECONDS=0
-cat ../kperf/config/receiver.yaml | envsubst | kubectl apply -f -
+cat ./config/receiver.yaml | envsubst | kubectl apply -f -
 
 echo "Wait for kperf receiver to get ready"
 kubectl wait deployment/kperf-eventing-receiver --for=condition=Available --timeout=300s
 
 echo "Establish tunnel to namespace where kperf deployment is running "
-pkill kubectl port-forward deployment/kperf-eventing-receiver 8001:8001
+#pkill kubectl port-forward deployment/kperf-eventing-receiver 8001:8001
 kubectl port-forward deployment/kperf-eventing-receiver 8001:8001&
 
 kubectl apply -f setup/kafka-source10.yaml

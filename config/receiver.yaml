@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kperf-eventing-receiver
+spec:
+  replicas: ${REPLICAS}
+  selector:
+    matchLabels: &labels
+      app: kperf-eventing-receiver
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+        - name: kperf-eventing-receiver
+          image: ${IMAGE_NAME}
+          imagePullPolicy: Always
+          command: ["/kperf"]
+          args: [ "eventing", "receiver" ]
+          env:
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: "${KAFKA_BOOTSTRAP_SERVERS}"
+          - name: KAFKA_TOPIC
+            value: "${KAFKA_TOPIC}"
+          - name: KAFKA_GROUP
+            value: "${KAFKA_GROUP}"
+          - name: KAFKA_NET_TLS_ENABLE
+            value: "${KAFKA_NET_TLS_ENABLE}"
+          - name: KAFKA_NET_SASL_ENABLE
+            value: "${KAFKA_NET_SASL_ENABLE}"
+          - name: KAFKA_NET_SASL_USER
+            value: "${KAFKA_NET_SASL_USER}"
+          - name: KAFKA_NET_SASL_PASSWORD
+            value: "${KAFKA_NET_SASL_PASSWORD}"
+          - name: REDIS_ADDRESS
+            value: "${REDIS_ADDRESS}"
+          - name: SLEEP_SECONDS
+            value: "${SLEEP_SECONDS}"
+          - name: BUCKET_LIST
+            value: "${BUCKET_LIST}"
+          resources:
+            requests:
+              cpu: "2"
+              memory: "8G"
+            limits:
+              cpu: "2"
+              memory: "8G"
+          ports:
+          - containerPort: 8001
+            name: http
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kperf-eventing-receiver
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '8001'
+spec:
+  selector:
+    app: kperf-eventing-receiver
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001
+      name: http
