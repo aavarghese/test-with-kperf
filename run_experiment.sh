@@ -75,7 +75,7 @@ echo "driver EXPERIMENT_ID=$EXPERIMENT_ID SETUP_ID=$SETUP_ID WORKLOAD_ID=$WORKLO
 # measure
 echo "measure until no more metrics"
 #./kperf.sh eventing measure 
-docker run --network="host" --env-file env.list -p 8001:8001 $IMAGE_NAME /kperf eventing measure 
+docker run --network="host" --env-file env.list -v ${PWD}/logs:logs $IMAGE_NAME /kperf eventing measure 
 #sleep 1
 
 CLEANUP_FILE=${SETUP_FILE%.sh}_clean.sh
