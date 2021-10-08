@@ -11,12 +11,14 @@ kubens kperfns
 Then run experiment
 
 ```
-export EXPERIMENT_ID=Jul7
-export SETUP_ID=local-http-baseline
+export EXPERIMENT_ID=Oct8a
+export SETUP_ID=alek-ocp-kss-topic10
 export WORKLOAD_ID=2x2x2
 
 ./run_experiment.sh
 ```
+
+
 
 
 
@@ -57,4 +59,15 @@ Check topics were created with partitions, for example:
 
 ```
 kubectl -n kafka exec -it my-cluster-kafka-0 -c kafka -- bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --describe --topic topic100
+```
+
+
+## Local test (not wokring)
+
+```
+export EXPERIMENT_ID=Oct8a
+export SETUP_ID=local-docker-http-baseline
+export WORKLOAD_ID=2x2x2
+
+./run_experiment.sh
 ```

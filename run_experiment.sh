@@ -2,6 +2,9 @@
 
 set -e # exit on error
 
+export VERSION=0.3
+export IMAGE_NAME=${DOCKER_REGISTRY:-docker.io/aslom}/kperf:${VERSION}
+
 # https://stackoverflow.com/questions/4381618/exit-a-script-on-error/4382179
 f () {
     errorCode=$? # save the exit code as the first thing done in the trap function
@@ -71,7 +74,8 @@ echo "driver EXPERIMENT_ID=$EXPERIMENT_ID SETUP_ID=$SETUP_ID WORKLOAD_ID=$WORKLO
 
 # measure
 echo "measure until no more metrics"
-./kperf.sh eventing measure 
+#./kperf.sh eventing measure 
+docker run --network="host" --env-file env.list -p 8001:8001 $IMAGE_NAME /kperf eventing measure 
 #sleep 1
 
 CLEANUP_FILE=${SETUP_FILE%.sh}_clean.sh
