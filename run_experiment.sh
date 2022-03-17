@@ -2,8 +2,8 @@
 
 set -e # exit on error
 
-export VERSION=0.3
-export IMAGE_NAME=${DOCKER_REGISTRY:-docker.io/aslom}/kperf:${VERSION}
+export VERSION=0.4
+export IMAGE_NAME=${DOCKER_REGISTRY:-docker.io/avarghese23}/kperf:${VERSION}
 
 # https://stackoverflow.com/questions/4381618/exit-a-script-on-error/4382179
 f () {
@@ -73,9 +73,26 @@ echo "driver EXPERIMENT_ID=$EXPERIMENT_ID SETUP_ID=$SETUP_ID WORKLOAD_ID=$WORKLO
 
 
 # measure
-echo "measure until no more metrics"
+#echo "measure until no more metrics"
 #./kperf.sh eventing measure 
-docker run --network="host" --env-file env.list -v ${PWD}/logs:/logs $IMAGE_NAME /kperf eventing measure 
+#docker run --network="host" --env-file env.list -v ${PWD}/logs:/logs $IMAGE_NAME /kperf eventing measure 
+
+if [ ! -z $POD_FAILURE ]; then
+  sleep 120s
+  echo "creating a pod failure scenario"
+  kubectl delete pod kafkasource-mt-adapter-2 -n knative-eventing
+fi
+if [ ! -z $NODE_GRACEFUL_FAILURE ]; then
+  sleep 120s
+  echo "creating a node graceful failure scenario"
+  kubectl drain 10.73.188.10 --ignore-daemonsets --delete-emptydir-data
+fi
+if [ ! -z $NODE_ABRUPT_FAILURE ]; then
+  sleep 120s
+  echo "creating a node abrupt failure scenario"
+  kubectl delete node 10.73.188.10 --force
+fi
+
 #sleep 1
 
 CLEANUP_FILE=${SETUP_FILE%.sh}_clean.sh
