@@ -16,9 +16,9 @@ f () {
 
 switchToO5 () {
     echo "Switching context"
-    kubectx kperf7/c114-e-us-south-containers-cloud-ibm-com:30501/IAM#aslom@us.ibm.com
+    kubectx default/c116-e-us-south-containers-cloud-ibm-com:31539/IAM#avarghese@us.ibm.com
     echo "Switching namespace"
-    kubens kperf7
+    kubens kperf1
 }
 
 
@@ -175,6 +175,7 @@ createKafkaSrc () {
     export TOPIC_NAME=topic${PARTITIONS}-$TENANT_ID
     export SOURCE_NAME=kafka-src${PARTITIONS}-$TENANT_ID
     export GROUP_NAME=knative-group${PARTITIONS}-$TENANT_ID
+    export REPLICAS=$((TENANT_ID * 10))
     #cat ../test-with-kperf/setup/kafka-src-name.yaml | envsubst | kubectl apply -f -
     cat <<EOF | envsubst | kubectl apply -f -
 apiVersion: sources.knative.dev/v1beta1
@@ -190,6 +191,7 @@ metadata:
     keda.autoscaling.knative.dev/pollingInterval: "10"
 spec:
   consumerGroup: ${GROUP_NAME}
+  consumers: ${REPLICAS}
   bootstrapServers:
   - my-cluster-kafka-bootstrap.kafka:9092 # note the kafka namespace
   topics:
@@ -203,7 +205,7 @@ EOF
 
     echo "Waiting for Kafka source to get ready"
     kubectl wait kafkasources.sources.knative.dev/${SOURCE_NAME} --for=condition=Ready --timeout=300s
-    echo "Deployed Kafka source $SOURCE_NAME for Kafka topic $TOPIC_NAME"
+    echo "Deployed Kafka source $SOURCE_NAME for Kafka topic $TOPIC_NAME with $REPLICAS replicas"
 }
 
 createStrimziTopic () {
