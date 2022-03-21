@@ -1,0 +1,38 @@
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-es10
+  annotations:
+    autoscaling.knative.dev/class: keda.autoscaling.knative.dev
+    autoscaling.knative.dev/minScale: "1"
+    autoscaling.knative.dev/maxScale: "10"
+    keda.autoscaling.knative.dev/pollingInterval: "30"
+    keda.autoscaling.knative.dev/cooldownPeriod: "30"
+    keda.autoscaling.knative.dev/kafkaLagThreshold: "10"
+spec:
+  consumerGroup: kafka-es10-27a
+  bootstrapServers:
+#    - my-cluster-kafka-bootstrap.openshift-operators:9092
+    - kafka-1.mh-lbnyvywmvwwvpcmssqgl-4c201a12d7add7c99d2b22e361c6f175-0000.us-south.containers.appdomain.cloud:9093
+    - kafka-2.mh-lbnyvywmvwwvpcmssqgl-4c201a12d7add7c99d2b22e361c6f175-0000.us-south.containers.appdomain.cloud:9093
+    - kafka-0.mh-lbnyvywmvwwvpcmssqgl-4c201a12d7add7c99d2b22e361c6f175-0000.us-south.containers.appdomain.cloud:9093
+  topics:
+    - e2et10
+  net:
+    sasl:
+      enable: true
+      user:
+        secretKeyRef:
+          name: kafka-secret-es
+          key: user
+      password:
+        secretKeyRef:
+          name: kafka-secret-es
+          key: password 
+    tls:
+      enable: true
+  sink:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: kperf-eventing-receiver

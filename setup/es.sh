@@ -1,0 +1,7 @@
+export TARGET_URL=kafka:/
+export KAFKA_BOOTSTRAP_SERVERS=kafka-1.mh-lbnyvywmvwwvpcmssqgl-4c201a12d7add7c99d2b22e361c6f175-0000.us-south.containers.appdomain.cloud:9093
+export KAFKA_NET_TLS_ENABLE=true
+export KAFKA_NET_SASL_ENABLE=true
+export KAFKA_NET_SASL_USER=token
+export KAFKA_NET_SASL_PASSWORD=VTJHYPqy9wFx9OPKiy6sFGBTrdxsRIov45EXc8lID5lw
+export KAFKA_GROUP=${SETUP_ID}-receiver

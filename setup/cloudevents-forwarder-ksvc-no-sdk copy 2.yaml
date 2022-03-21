@@ -1,0 +1,24 @@
+apiVersion: serving.knative.dev/v1 # Current version of Knative
+kind: Service
+metadata:
+  name: cloudevents-forwarder-ksvc # The name of the app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: "10"
+        autoscaling.knative.dev/minScale: "10"
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - image: quay.io/aslom/cloudevents-forwarder-go
+          imagePullPolicy: Always 
+          env:
+            - name: CLOUDEVENTS_FORWARDER_TARGET 
+              value: "${TARGET_URL}"
+            - name: CLOUDEVENTS_FORWARDER_SLEEP_SECONDS 
+              value: "0"
+            - name: SKIP_SDK 
+              value: "true"

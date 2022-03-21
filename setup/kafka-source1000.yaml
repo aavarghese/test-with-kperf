@@ -1,20 +1,20 @@
 apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
 metadata:
-  name: kafka-src10
+  name: kafka-src1k
   annotations:
     autoscaling.knative.dev/class: keda.autoscaling.knative.dev
-    autoscaling.knative.dev/maxScale: "1"
-    autoscaling.knative.dev/minScale: "10"
+    autoscaling.knative.dev/maxScale: "10"
+    autoscaling.knative.dev/minScale: "1"
     keda.autoscaling.knative.dev/cooldownPeriod: "10"
     keda.autoscaling.knative.dev/kafkaLagThreshold: "2"
     keda.autoscaling.knative.dev/pollingInterval: "10"
 spec:
-  consumerGroup: kafka-src10j27b
+  consumerGroup: knative-group1k
   bootstrapServers:
   - my-cluster-kafka-bootstrap.kafka:9092 # note the kafka namespace
   topics:
-  - topic10
+  - topic1000
   sink:
     ref:
       apiVersion: v1

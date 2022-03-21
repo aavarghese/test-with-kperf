@@ -1,0 +1,16 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: keda-scale10
+spec:
+  scaleTargetRef:
+    name: kafkasource-kafka-src10-8be26434-564b-4d95-9c1a-307c83aa7d17
+  pollingInterval: 30
+  triggers:
+  - type: kafka
+    metadata:
+      # Required
+      bootstrapServers: my-cluster-kafka-bootstrap.kafka:9092
+      consumerGroup: knative-group10       # Make sure that this consumer group name is the same one as the one that is consuming topics
+      topic: topic10
+      lagThreshold: "5"

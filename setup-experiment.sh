@@ -3,7 +3,7 @@
 set -e # exit on error
 
 #set -o xtrace
-#set -o verbose
+set -o verbose
 
 SCRIPT_DIR=$( dirname "${BASH_SOURCE[0]}" ) 
 source ./experiment-library.sh
