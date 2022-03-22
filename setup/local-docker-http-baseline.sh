@@ -4,8 +4,8 @@ export TARGET_URL=http://localhost:8001
 
 #KPERF=${KPERF:=./kperf.sh}
 
-export VERSION=0.3
-export IMAGE_NAME=${DOCKER_REGISTRY:-docker.io/aslom}/kperf:${VERSION}
+export VERSION=0.4
+export IMAGE_NAME=${DOCKER_REGISTRY:-docker.io/avarghese23}/kperf:${VERSION}
 
 
 

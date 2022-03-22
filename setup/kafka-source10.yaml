@@ -10,6 +10,7 @@ metadata:
     keda.autoscaling.knative.dev/kafkaLagThreshold: "2"
     keda.autoscaling.knative.dev/pollingInterval: "10"
 spec:
+  consumers: 15
   consumerGroup: kafka-src10j27b
   bootstrapServers:
   - my-cluster-kafka-bootstrap.kafka:9092 # note the kafka namespace
