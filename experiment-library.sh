@@ -126,7 +126,7 @@ spec:
       port: 80
       targetPort: 8001
       name: http
-EOF        
+EOF
 
     echo "Waiting for kperf receiver deployment to get available"
     kubectl wait deployment/kperf-eventing-receiver --for=condition=Available --timeout=300s
@@ -161,7 +161,8 @@ spec:
       apiVersion: v1
       kind: Service
       name: kperf-eventing-receiver
-EOF        
+EOF
+   
     echo "Waiting for Kafka source to get ready"
     kubectl wait kafkasources.sources.knative.dev/kafka-src100 --for=condition=Ready --timeout=300s
     export KAFKA_TOPIC=topic100
